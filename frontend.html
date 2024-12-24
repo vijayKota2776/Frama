@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faram </title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('https://via.placeholder.com');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: #fff;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    .header {
+      background-color: rgba(40, 167, 69, 0.9);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .nav-bar {
+      display: flex;
+      gap: 15px;
+    }
+    .nav-bar button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .nav-bar button:hover {
+      text-decoration: underline;
+    }
+    .content {
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+      margin: 20px;
+    }
+    .hidden {
+      display: none;
+    }
+    .about h2, .contact h2 {
+      color: #28a745;
+    }
+    .form-section {
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      color: #000;
+    }
+    .form-section input, .form-section select, .form-section button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .form-section button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .scroll-container {
+      display: flex;
+      overflow-x: auto;
+      gap: 15px;
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 5px;
+    }
+    .card {
+      flex: 0 0 auto;
+      width: 200px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: white;
+      text-align: center;
+      padding: 15px;
+    }
+    .card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+    .card p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <h1>Faram Dashboard</h1>
+    <div class="nav-bar">
+      <button onclick="showSection('about')">About Us</button>
+      <button onclick="showSection('recommendation')">Crop Recommendations</button>
+      <button onclick="showSection('rent')">Rent Equipment</button>
+      <button onclick="showSection('community')">Community</button>
+      <button onclick="showSection('contact')">Contact Info</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <div id="aboutSection" class="about">
+      <h2>About Us</h2>
+      <p>
+        Faram is your ultimate agricultural partner, offering personalized crop recommendations, equipment rentals, and a thriving community for farmers.
+      </p>
+    </div>
+
+    <div id="recommendationSection" class="form-section hidden">
+      <h2>Crop Recommendations</h2>
+      <form id="recommendationForm">
+        <label for="location">Location</label>
+        <select id="location" name="location">
+          <option value="india">India</option>
+          <option value="usa">USA</option>
+          <option value="australia">Australia</option>
+        </select>
+        <label for="land-size">Total Land Size (acres)</label>
+        <input type="number" id="land-size" name="land-size" placeholder="Enter land size in acres">
+        <label for="soil-type">Soil Type</label>
+        <input type="text" id="soil-type" name="soil-type" placeholder="Enter soil type (e.g., Loamy, Clay)">
+        <label for="planting-month">Planting Month</label>
+        <input type="month" id="planting-month" name="planting-month">
+        <button type="button" onclick="getRecommendations()">Get Recommendations</button>
+      </form>
+      <div id="recommendationResult" class="hidden"></div>
+    </div>
+
+    <div id="rentSection" class="hidden">
+      <h2>Rent Equipment</h2>
+      <div class="scroll-container" id="equipmentContainer"></div>
+    </div>
+
+    <div id="communitySection" class="hidden">
+        <h2><a href="https://discord.gg/2Aq6KrfcvM">Community</a></h2>
+      <p>Welcome to the Faram Community! Connect, share, and learn with fellow farmers.</p>
+    </div>
+
+    <div id="contactSection" class="contact hidden">
+      <h2>Contact Info</h2>
+      <p>Email: support@faram.com</p>
+      <p>Phone: +91 12345 67890</p>
+    </div>
+  </div>
+
+  <script>
+    const equipmentData = [
+      { name: 'Tractor', price: '₹500/day', image: '/Users/vijaykota/Documents/faram/tractor.webp' },
+      { name: 'Plough', price: '₹200/day', image: '/Users/vijaykota/Documents/faram/old-plough.webp' },
+      { name: 'Harvester', price: '₹800/day', image: '/Users/vijaykota/Documents/faram/green-system-roto-seeder-john-deere-1000x1000.webp' },
+      { name: 'Seeder', price: '₹400/day', image: '/Users/vijaykota/Documents/faram/big-red-one.webp' },
+    ];
+
+    function showSection(sectionId) {
+      document.querySelectorAll('.content > div').forEach(section => section.classList.add('hidden'));
+      document.getElementById(sectionId + 'Section').classList.remove('hidden');
+    }
+
+    function getRecommendations() {
+      const location = document.getElementById('location').value;
+      const landSize = document.getElementById('land-size').value;
+      const soilType = document.getElementById('soil-type').value;
+      const plantingMonth = document.getElementById('planting-month').value;
+
+      const recommendations = [
+        { crop: 'Wheat', suitability: 'High' },
+        { crop: 'Rice', suitability: 'Medium' },
+      ];
+
+      const resultDiv = document.getElementById('recommendationResult');
+      resultDiv.innerHTML = `<h3>Recommendations:</h3>
+        ${recommendations.map(r => `<p>${r.crop}: ${r.suitability}</p>`).join('')}`;
+      resultDiv.classList.remove('hidden');
+    }
+
+    function loadEquipment() {
+      const container = document.getElementById('equipmentContainer');
+      equipmentData.forEach(item => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.innerHTML = `
+          <img src="${item.image}" alt="${item.name}">
+          <p>${item.name}</p>
+          <p>${item.price}</p>`;
+        container.appendChild(card);
+      });
+    }
+
+    // Load equipment data on startup
+    loadEquipment();
+  </script>
+</body>
+</html>
